@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #score {
+            font-size: 130px;
+            font-style: bold;
+            margin: 40px;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #clickbutton,#upgradebutton,#autoclickerbutton, #memebutton {
+            border-style: solid;
+            border-width: 5px;
+            border-color: lightblue;
+            background-color: powderblue;
+            height: 120px;
+            margin: 10px;
+            margin-left: 60px;
+        }
+        
+        #addingValue, #costValue, #autoClickerValue, #memeButtonValue{
+            font-size: 40px;
+            margin: 0px;
+            font-style: italic;
+        }
+        html{
+            background-image:url("https://coolbackgrounds.io/images/backgrounds/blue/blue-trianglify-8e4a0501.jpg");
+            background-repeat: no-repeat;
+            background-size: 1500px 800px;
+        }   
+    </style>
+</head>
+
+<body>
+    <img id="clickbutton" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptIeNbHwaCra8Ujb-ct1yX12wmPLtCcN2fQ:https://upload.wikimedia.org/wikipedia/commons/f/fa/Click_here_button.png&usqp=CAU">
+    <img id="upgradebutton" src="https://learningworksforkids.com/wp-content/uploads/Upgrade-Now-Button.png">
+    <img id="autoclickerbutton" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJduW4fV5_sTW5YShuv5suQ9TgQfUXgAipf4tyFTwZcWmNwAKxnd6hgFUEZAUYAojJN6c:https://img.itch.zone/aW1nLzEwNTg5NTgwLnBuZw%3D%3D/original/Qg4dyt.png&usqp=CAU">
+    <img id="memebutton" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8K4CJxAjcBUtR8y4rzzON0rcHv5G_TXfgYSI2sZB2tKzIJpNThmmsuvCSCkxcglg3H-o:https://media0.giphy.com/media/gHWiwrUzERHgQ2Y79Q/giphy.gif&usqp=CAU">
+
+    <p id="addingValue">
+        + 1
+    </p>
+    <p id="costValue">
+        Cost for Upgrade is 10 Moneys
+    </p>
+    <p id="autoClickerValue">
+        Cost for Auto-Clicker is 200 Moneys
+    </p>
+    <p id="memeButtonValue">
+        Cost for ULTRA upgrade is 100000 Moneys
+    </p>
+    <p id="score">
+        0 Moneys
+    </p>
+</body>
+
+</html>
+<script>
+
+    var score = 0
+    var incrementValue = 1
+    var incrementValueValue = 1
+    var costUpgrade = 10
+    var costAutoClicker = 200
+    var costSuperUpgrade = 100000
+
+    document.getElementById("clickbutton").addEventListener("click", addScore)
+    function addScore() {
+        score = score + incrementValue
+        document.getElementById("score").innerText = score + " Moneys"
+    }
+
+    document.getElementById("upgradebutton").addEventListener("click", moreAdding)
+    function moreAdding() {
+        if(score >= costUpgrade){
+            score = score - costUpgrade
+            document.getElementById("score").innerText = score + " Moneys"
+            incrementValue = incrementValue + incrementValueValue
+            document.getElementById("addingValue").innerText = "+ " + incrementValue
+            costUpgrade = costUpgrade + 5
+            document.getElementById("costValue").innerText = "Cost for upgrade is " + costUpgrade + " Moneys"
+        }else{
+            alert("YOU DON'T HAVE ENOUGH MONEY")
+        }
+    }
+
+    document.getElementById("autoclickerbutton").addEventListener("click", autoclicker)
+    function autoclicker(){
+        if(score >= costAutoClicker){
+              setInterval(addScore, 200)
+              score = score - costAutoClicker
+              document.getElementById("score").innerText = score + " Moneys"
+              costAutoClicker = 2*costAutoClicker
+              document.getElementById("autoClickerValue").innerText = "Cost for Auto-Clicker is " + costAutoClicker + " Moneys"
+        }else{
+            alert("YOU DON'T HAVE ENOUGH MONEY")
+        }
+    }
+
+    document.getElementById("memebutton").addEventListener("click", superUpgrade)
+    function superUpgrade(){
+        if(score >= costSuperUpgrade){
+        score = score - costSuperUpgrade
+        document.getElementById("score").innerText = score + " Moneys"
+        incrementValueValue = 50*incrementValueValue
+        costSuperUpgrade = 50*costSuperUpgrade
+        document.getElementById("memeButtonValue").innerText = "Cost for ULTRA upgrade is " + costSuperUpgrade + " more Moneys"
+        }else{
+            alert("YOU DON'T HAVE ENOUGH MONEY")
+        }
+    }
+    
+</script>
