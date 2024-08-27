@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id = "canvas" width = "1350" height = "750" style = "background-color: black;"></canvas>
+</body>
+
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    var arrayWidth = []
+    var arrayHeight = []
+
+    var arrayX = []
+    var arrayChangeX = []
+    var arrayY = []    
+    var arrayChangeY = []
+
+    var arrayColor = []
+
+    var boxes = 300
+    
+    startArrays()
+    function startArrays(){
+        for(i=0; i<boxes; i++){
+            arrayWidth.push(Math.random()*30+10)
+            arrayHeight.push(Math.random()*30+10)
+            if(Math.random()<0.5){
+                arrayWidth.push(10)
+            }else{
+                arrayWidth.push(100)
+            }
+            if(Math.random()<0.5){
+                arrayHeight.push(100)
+            }else{
+                arrayHeight.push(10)
+            }
+            // arrayWidth.push(40)
+            // arrayHeight.push(40)
+
+
+            arrayX.push(Math.random()*(1350-arrayWidth[i]))
+            if(Math.random()<0.5){arrayChangeX.push(1)}else(arrayChangeX.push(-1))
+            arrayY.push(Math.random()*(750-arrayHeight[i]))
+            if(Math.random()<0.5){arrayChangeY.push(1)}else(arrayChangeY.push(-1))
+
+            arrayColor.push(Math.random()*259)
+        }
+    }
+    
+    document.addEventListener("keydown", faster)
+    function faster(){
+        setInterval(frames, 10)
+    }
+    setInterval(frames, 10)
+    function frames(){
+        ctx.clearRect(0,0,2000,1000)
+        for(i=0; i<boxes; i++){
+
+            arrayX[i] += arrayChangeX[i]
+            arrayY[i] += arrayChangeY[i]
+
+            // Bouncing off walls
+            if(arrayX[i]<=0){
+                arrayChangeX[i] = -arrayChangeX[i]
+            }
+            if(arrayX[i]>=1350-arrayWidth[i]){
+                arrayChangeX[i] = -arrayChangeX[i]
+            }
+            if(arrayY[i]<=0){
+                arrayChangeY[i] = -arrayChangeY[i]
+            }
+            if(arrayY[i]>=750-arrayHeight[i]){
+                arrayChangeY[i] = -arrayChangeY[i]
+            }
+
+            // Making the boxes bounce off of each other
+            collision()
+            function collision(){
+                for(j=0; j<boxes; j++){
+
+                    //Detecting collisions
+                    if(i !== j){
+                        if(arrayX[i]+arrayWidth[i]>arrayX[j] && arrayX[i]<arrayX[j]+arrayWidth[j] && arrayY[i]+arrayHeight[i]>arrayY[j] && arrayY[i]<arrayY[j]+arrayHeight[j]){
+                            resolveCollision()
+                        }
+                    }
+
+                    // Resolving collisions with other boxes
+                    function resolveCollision(){
+                        var centerToCenterX = (arrayX[i]+arrayWidth[i]/2) - (arrayX[j]+arrayWidth[j]/2)
+                        var centerToCenterY = (arrayY[i]+arrayHeight[i]/2) - (arrayY[j]+arrayHeight[j]/2)
+
+                        var widthPlusWidth = arrayWidth[i]/2 + arrayWidth[j]/2
+                        var heightPlusHeight = arrayHeight[i]/2 + arrayHeight[j]/2
+
+                        distanceBetweenEdgesX = widthPlusWidth - Math.abs(centerToCenterX)
+                        distanceBetweenEdgesY = heightPlusHeight - Math.abs(centerToCenterY)
+
+                        if(distanceBetweenEdgesX>distanceBetweenEdgesY){
+                            if(centerToCenterY>0){
+                                arrayChangeY[i] = -arrayChangeY[i]
+                            }else{
+                                arrayChangeY[i] = -arrayChangeY[i]
+                            }
+                        }else if(distanceBetweenEdgesX<distanceBetweenEdgesY){
+                            if(centerToCenterX>0){
+                                arrayChangeX[i] = -arrayChangeX[i]
+                            }else{
+                                arrayChangeX[i] = -arrayChangeX[i]
+                            }
+                        }else{
+                            arrayChangeY[i] = -arrayChangeY[i]
+                            arrayChangeX[i] = -arrayChangeX[i]
+                        }
+                    }
+                }
+            }
+            ctx.fillStyle = "hsl("+arrayColor[i]+",100%, 50%)"
+            ctx.fillRect(arrayX[i], arrayY[i], arrayWidth[i], arrayHeight[i])
+        }
+    }
+</script>

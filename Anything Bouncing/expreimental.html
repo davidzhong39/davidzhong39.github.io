@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #area {
+            height: 90px;
+            width: 90px;
+            background-color: lightblue;
+            position: absolute;
+            border: solid;
+            border-width: 5px;
+            top: 0px;
+            left: 0px;
+            z-index: 1;
+        }
+
+        #box, #boxTwo, #boxThree, #boxFour, #boxFive, #boxSix, #boxSeven, #boxEight, #boxNine, #boxTen, #boxEleven, #boxTwelve, #boxThirteen, #boxFourteen, #boxFifteen, #boxSixteen {
+            height: 50px;
+            width: 50px;
+            position: absolute;
+            border: solid;
+            border-width: 5px;
+            top: 0px;
+            left: 0px;
+        }
+        #box{
+            height: 50px;
+            width: 50px;
+            background-color: red;
+            z-index: 19;
+            opacity: 0.5;
+        }
+        #boxTwo{
+            height: 48px;
+            width: 48px;
+            background-color: orange;
+            z-index: 18;
+        }
+        #boxThree{
+            height: 46px;
+            width: 46px;
+            background-color: yellow;
+            z-index: 17;
+        }
+        #boxFour{
+            height: 44px;
+            width: 44px;
+            background-color: yellowgreen;
+            z-index: 16;
+        }
+        #boxFive{
+            height: 42px;
+            width: 42px;
+            background-color: lightsalmon;
+            z-index: 15;
+        }
+        #boxSix{
+            height: 40px;
+            width: 40px;
+            background-color: rgb(125, 129, 143);
+            z-index: 14;
+        }
+        #boxSeven{
+            height: 38px;
+            width: 38px;
+            background-color: purple;
+            z-index: 13;
+        }
+        #boxEight{
+            height: 36px;
+            width: 36px;
+            background-color: black;
+            z-index: 12;
+        }
+        #boxNine{
+            height: 34px;
+            width: 34px;
+            background-color: rgb(31, 30, 30);
+            z-index: 11;
+        }
+        #boxTen{
+            height: 32px;
+            width: 32px;
+            background-color: rgb(61, 60, 60);
+            z-index: 10;
+        }
+        #boxEleven{
+            height: 30px;
+            width: 30px;
+            background-color: rgb(97, 96, 96);
+            z-index: 9;
+        } 
+        #boxTwelve{
+            height: 28px;
+            width: 28px;
+            background-color: rgb(182, 178, 178);
+            z-index: 8;
+        }
+        #boxThirteen{
+            height: 26px;
+            width: 26px;
+            background-color: rgb(224, 222, 222);
+            z-index: 7;
+        } 
+        #boxFourteen{
+            height: 24px;
+            width: 24px;
+            background-color: rgb(245, 196, 196);
+            z-index: 6;
+        } 
+        #boxFifteen{
+            height: 22px;
+            width: 22px;
+            background-color: rgb(240, 157, 157);
+            z-index: 5;
+        } 
+        #boxSixteen{
+            height: 20px;
+            width: 20px;
+            background-color: rgb(243, 121, 121);
+            z-index: 4;
+        }
+        #speed {
+            position: absolute;
+            bottom: -80px;
+            left: 590px;
+            z-index: 2;
+        }
+        #follow {
+            position: absolute;
+            bottom: -80px;
+            left: 760px;
+            z-index: 3;
+        }
+        #count1, #count2{
+            position: absolute;
+            bottom: -200px;
+            font-size: 50px;
+            z-index: 30;
+        }
+        #count1{
+            left: 590px;
+        }
+        #count2{
+            left: 760px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+    </div>
+    <div id="boxTwo">
+    </div>
+    <div id="boxThree">
+    </div>
+    <div id="boxFour">
+    </div>
+    <div id="boxFive">
+    </div>
+    <div id="boxSix">
+    </div>
+    <div id="boxSeven">
+    </div>
+    <div id="boxEight">
+    </div>
+    <div id="boxNine">
+    </div>
+    <div id="boxTen">
+    </div>
+    <div id="boxEleven">
+    </div>
+    <div id="boxTwelve">
+    </div>
+    <div id="boxThirteen">
+    </div>
+    <div id="boxFourteen">
+    </div>
+    <div id="boxFifteen">
+    </div>
+    <div id="boxSixteen">
+    </div>
+
+    <div id="area">
+        <button id="speed">
+            Click here for Speeeeed!
+        </button>
+        <p id="count1">
+            0
+        </p>
+        <button id="follow">
+            Click here for cool TRAIL!
+        </button>
+        <p id="count2">
+            0
+        </p>
+    </div>
+</body>
+
+<script>
+    var x = 0
+    var y = 0
+    var xShift = 1
+    var yShift = 1
+    var xBoundary = 4000
+    var yBoundary = 1999
+
+    var xboxTwo = 0
+    var yboxTwo = 0
+    var xboxThree = 0
+    var yboxThree = 0
+    var xboxFour = 0
+    var yboxFour = 0
+    var xboxFive = 0
+    var yboxFive = 0
+    var xboxSix = 0
+    var yboxSix = 0
+    var xboxSeven = 0
+    var yboxSeven = 0
+    var xboxEight = 0
+    var yboxEight = 0
+    var xboxNine = 0
+    var yboxNine = 0
+    var xboxTen = 0
+    var yboxTen = 0
+    var xboxEleven = 0
+    var yboxEleven = 0
+    var xboxTwelve = 0
+    var yboxTwelve = 0
+    var xboxThirteen = 0 
+    var yboxThirteen = 0
+    var xboxFourteen = 0 
+    var yboxFourteen = 0
+    var xboxFifteen = 0 
+    var yboxFifteen = 0
+    var xboxSixteen = 0
+    var yboxSixteen = 0
+
+    var count1 = 0
+    var count2 = 0
+
+    //updating boundaries of area//
+    document.getElementById("area").style.width = xBoundary + 50 + "px"
+    document.getElementById("area").style.height = yBoundary + 50 + "px"
+
+    //keyboard inputs, actual gaming
+        // document.addEventListener("keydown", turning)
+        // function turning(event){
+        //     if(event.key === "ArrowRight"){
+        //         xShift = xShift + 10
+        //     }
+        //     if(event.key === "ArrowLeft"){
+        //         xShift = xShift - 10
+        //     }
+        //     if(event.key === "ArrowUp"){
+        //         yShift = yShift - 10
+        //     }
+        //     if(event.key === "ArrowDown"){
+        //         yShift = yShift + 10
+        //     }
+        // }
+
+    //making the main red box move and bounce//
+    document.getElementById("speed").addEventListener("click", slideShow)
+    function moveBox() {
+        x = x + xShift
+        y = y + yShift
+        if (x <= 0) {
+            xShift = -xShift
+        }
+        if (x >= xBoundary) {
+            xShift = -xShift
+        }
+        if (y <= 0) {
+            yShift = -yShift
+        }
+        if (y >= yBoundary) {
+            yShift = -yShift
+        }
+        document.getElementById("box").style.left = x + "px"
+        document.getElementById("box").style.top = y + "px"
+    }
+    function slideShow() {
+        setInterval(moveBox, 10)
+        count1 = count1 + 1
+        document.getElementById("count1").innerText = count1
+    }
+
+    //making trailing boxes do the trailing//
+    document.getElementById("follow").addEventListener("click", follow)
+    document.getElementById("follow").addEventListener("click", followTwo)
+    document.getElementById("follow").addEventListener("click", followThree)
+    document.getElementById("follow").addEventListener("click", followFour)
+    document.getElementById("follow").addEventListener("click", followFive)
+    document.getElementById("follow").addEventListener("click", followSix)
+    document.getElementById("follow").addEventListener("click", followSeven)
+    document.getElementById("follow").addEventListener("click", followEight)
+    document.getElementById("follow").addEventListener("click", followNine)
+    document.getElementById("follow").addEventListener("click", followTen)
+    document.getElementById("follow").addEventListener("click", followEleven)
+    document.getElementById("follow").addEventListener("click", followTwelve)
+    document.getElementById("follow").addEventListener("click", followThirteen)
+    document.getElementById("follow").addEventListener("click", followFourteen)
+    document.getElementById("follow").addEventListener("click", followFifteen)
+    function trail() {
+        xboxTwo = xboxTwo + (x - xboxTwo) * 0.08
+        yboxTwo = yboxTwo + (y - yboxTwo) * 0.08
+        document.getElementById("boxTwo").style.left = xboxTwo + "px"
+        document.getElementById("boxTwo").style.top = yboxTwo + "px"
+    }
+    function follow() {
+        setInterval(trail, 20)
+        count2 = count2 + 1
+        document.getElementById("count2").innerText = count2
+       
+    }
+    function trailTwo() {
+        xboxThree = xboxThree + (xboxTwo - xboxThree) * 0.075
+        yboxThree = yboxThree + (yboxTwo - yboxThree) * 0.075
+        document.getElementById("boxThree").style.left = xboxThree + "px"
+        document.getElementById("boxThree").style.top = yboxThree + "px"
+    }
+    function followTwo() {
+        setInterval(trailTwo, 20)
+    }
+    function trailThree() {
+        xboxFour = xboxFour + (xboxThree - xboxFour) * 0.07
+        yboxFour = yboxFour + (yboxThree - yboxFour) * 0.07
+        document.getElementById("boxFour").style.left = xboxFour + "px"
+        document.getElementById("boxFour").style.top = yboxFour + "px"
+    }
+    function followThree() {
+        setInterval(trailThree, 20)
+    }
+    function trailFour() {
+        xboxFive = xboxFive + (xboxFour - xboxFive) * 0.065
+        yboxFive = yboxFive + (yboxFour - yboxFive) * 0.065
+        document.getElementById("boxFive").style.left = xboxFive + "px"
+        document.getElementById("boxFive").style.top = yboxFive + "px"
+    }
+    function followFour() {
+        setInterval(trailFour, 20)
+    }
+    function trailFive() {
+        xboxSix = xboxSix + (xboxFive - xboxSix) * 0.06
+        yboxSix = yboxSix + (yboxFive - yboxSix) * 0.06
+        document.getElementById("boxSix").style.left = xboxSix + "px"
+        document.getElementById("boxSix").style.top = yboxSix + "px"
+    }
+    function followFive() {
+        setInterval(trailFive, 20)
+    }
+    function trailSix() {
+        xboxSeven = xboxSeven + (xboxSix - xboxSeven) * 0.055
+        yboxSeven = yboxSeven + (yboxSix - yboxSeven) * 0.055
+        document.getElementById("boxSeven").style.left = xboxSeven + "px"
+        document.getElementById("boxSeven").style.top = yboxSeven + "px"
+    }
+    function followSix() {
+        setInterval(trailSix, 20)
+    }
+    function trailSeven() {
+        xboxEight = xboxEight + (xboxSeven - xboxEight) * 0.05
+        yboxEight = yboxEight + (yboxSeven - yboxEight) * 0.05
+        document.getElementById("boxEight").style.left = xboxEight + "px"
+        document.getElementById("boxEight").style.top = yboxEight + "px"
+    }
+    function followSeven() {
+        setInterval(trailSeven, 20)
+    }
+    function trailEight() {
+        xboxNine = xboxNine + (xboxEight - xboxNine) * 0.045
+        yboxNine = yboxNine + (yboxEight - yboxNine) * 0.045
+        document.getElementById("boxNine").style.left = xboxNine + "px"
+        document.getElementById("boxNine").style.top = yboxNine + "px"
+    }
+    function followEight() {
+        setInterval(trailEight, 20)
+    }
+    function trailNine() {
+        xboxTen = xboxTen + (xboxNine - xboxTen) * 0.04
+        yboxTen = yboxTen + (yboxNine - yboxTen) * 0.04
+        document.getElementById("boxTen").style.left = xboxTen + "px"
+        document.getElementById("boxTen").style.top = yboxTen + "px"
+    }
+    function followNine() {
+        setInterval(trailNine, 20)
+    }
+    function trailTen() {
+        xboxEleven = xboxEleven + (xboxTen - xboxEleven) * 0.035
+        yboxEleven = yboxEleven + (yboxTen - yboxEleven) * 0.035
+        document.getElementById("boxEleven").style.left = xboxEleven + "px"
+        document.getElementById("boxEleven").style.top = yboxEleven + "px"
+    }
+    function followTen() {
+        setInterval(trailTen, 20)
+    }
+    function trailEleven() {
+        xboxTwelve = xboxTwelve + (xboxEleven - xboxTwelve) * 0.033
+        yboxTwelve = yboxTwelve + (yboxEleven - yboxTwelve) * 0.033
+        document.getElementById("boxTwelve").style.left = xboxTwelve + "px"
+        document.getElementById("boxTwelve").style.top = yboxTwelve + "px"
+    }
+    function followEleven() {
+        setInterval(trailEleven, 20)
+    }
+    function trailTwelve() {
+        xboxThirteen = xboxThirteen + (xboxTwelve - xboxThirteen) * 0.031
+        yboxThirteen = yboxThirteen + (yboxTwelve - yboxThirteen) * 0.031
+        document.getElementById("boxThirteen").style.left = xboxThirteen + "px"
+        document.getElementById("boxThirteen").style.top = yboxThirteen + "px"
+    }
+    function followTwelve() {
+        setInterval(trailTwelve, 20)
+    }
+    function trailThirteen() {
+        xboxFourteen = xboxFourteen + (xboxThirteen - xboxFourteen) * 0.029
+        yboxFourteen = yboxFourteen + (yboxThirteen - yboxFourteen) * 0.029
+        document.getElementById("boxFourteen").style.left = xboxFourteen + "px"
+        document.getElementById("boxFourteen").style.top = yboxFourteen + "px"
+    }
+    function followThirteen() {
+        setInterval(trailThirteen, 20)
+    }
+    function trailFourteen() {
+        xboxFifteen = xboxFifteen + (xboxFourteen - xboxFifteen) * 0.027
+        yboxFifteen = yboxFifteen + (yboxFourteen - yboxFifteen) * 0.027
+        document.getElementById("boxFifteen").style.left = xboxFifteen + "px"
+        document.getElementById("boxFifteen").style.top = yboxFifteen + "px"
+    }
+    function followFourteen() {
+        setInterval(trailFourteen, 20)
+    }
+    function trailFifteen() {
+        xboxSixteen = xboxSixteen + (xboxFifteen - xboxSixteen) * 0.026
+        yboxSixteen = yboxSixteen + (yboxFifteen - yboxSixteen) * 0.026
+        document.getElementById("boxSixteen").style.left = xboxSixteen + "px"
+        document.getElementById("boxSixteen").style.top = yboxSixteen + "px"
+    }
+    function followFifteen() {
+        setInterval(trailFifteen, 20)
+    }
+</script>
+<html>

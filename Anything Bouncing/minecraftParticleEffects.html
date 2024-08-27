@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Hundred Boxes and More</title>
+    <style>
+        html{
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id = "canvas" width = "1423" height = "750" ></canvas>
+</body>
+</html>
+
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////               ONLY CHANGE STUFF BELOW THIS POINT               ///////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Self-explanatory
+    var boxWidth = 200
+    var boxHeight = 200
+    var colorOfBackground = "black"   // Needs to be a string
+
+    // Should the boxes mark their own paths?
+    var trace = true
+        
+    // Theme of either fire or cold. If var "warm" is false, it will be cold-themed
+    var warm = false
+
+    // If bounce is false, the boxes will just teleport to the other side of the screen at the edge
+    var bounce = true
+
+    // Don't go too crazy ( 😏😋 )
+    var boxes = 1
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////               ONLY CHANGE STUFF ABOVE THIS POINT               ///////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Updating background color
+    document.body.style.backgroundColor = colorOfBackground
+
+    // Arrays for every box; 5 total arrays
+    var arrayX = []
+    var arrayY = []
+    var arrayBoxWidth = []
+    var arrayBoxHeight = []
+    var arrayChangeX = []
+    var arrayChangeY = []
+    var arrayColor = []
+
+
+    // Generating random numbers for position, direction, and color of each box
+
+    for(i=0; i<boxes; i=i+1){
+
+        // Strange width-height stuff in the random numbers so the boxes don't generate inside the borders 
+        arrayX.push(Math.random()*(1423-boxWidth))
+        arrayY.push(Math.random()*(750-boxHeight))
+
+        // Determines what directions each box will go towards
+        if(Math.random()<0.5){
+            arrayChangeX.push(0.5)
+        }else {
+            arrayChangeX.push(-0.5)
+        }
+        if(Math.random()<0.5){
+            arrayChangeY.push(0.5)
+        }else {
+            arrayChangeY.push(-0.5)
+        }
+
+        // Each box's color
+        if(warm === true){var fire = 0}else{var fire = 190}
+        arrayColor.push((Math.random()*70)+fire)
+
+        arrayBoxWidth.push(boxWidth)
+        arrayBoxHeight.push(boxHeight)
+    }
+
+    // This function is run when when a box bounces
+    function simp(){
+        arrayX.push(Math.random()*(1423-boxWidth))
+        arrayY.push(Math.random()*(750-boxHeight))
+        if(Math.random()<0.5){
+            arrayChangeX.push(0.5)
+        }else {
+            arrayChangeX.push(-0.5)
+        }
+        if(Math.random()<0.5){
+            arrayChangeY.push(0.5)
+        }else {
+            arrayChangeY.push(-0.5)
+        }
+        if(warm === true){var fire = 0}else{var fire = 190}
+        arrayColor.push((Math.random()*70)+fire)
+
+        arrayBoxWidth.push(boxWidth)
+        arrayBoxHeight.push(boxHeight)
+    }
+
+    // Running the "change" function repeatedly. It's also sensitive to "q", so you can speed the boxes up
+    setInterval(change, 10)
+    document.addEventListener("keydown", yerr)
+    function yerr(e){
+        if(e.key === "q"){
+            setInterval(change, 10)
+        }
+    }
+
+    // Every box has its own unique x-position, y-position, change in the x-direction, 
+    // change in the y-direction, and color. Thus, requiring five arrays in total.
+    function change(){
+        
+        // If var "trace" is true, then the code clears the previous frame of boxes so paths aren't created
+        if(trace === true){}else{ctx.clearRect(0,0,2000,1000)}
+
+        // Calculations for each frame
+        for(i=0; i<boxes; i=i+1){
+
+            //Changing width and height
+            arrayBoxWidth[i] -= 0.05
+            if(arrayBoxWidth[i] <= 0){
+                arrayBoxWidth[i]  = 0
+            }
+            arrayBoxHeight[i] -= 0.05
+            if(arrayBoxHeight[i] <= 0){
+                arrayBoxHeight[i] = 0
+            }
+
+            // Changing positions of each box by their own changeX and changeY
+            if(arrayX[i] >= (1423-boxWidth)){
+                if(bounce === true){
+                    arrayChangeX[i] = -arrayChangeX[i]  // Changing direction on collision with wall
+                    boxes += 1
+                    simp()
+                }else{
+                    arrayX[i] = 0  // This arrayX[i] = 0 part makes the boxes teleport from one side to the other
+                }
+            }
+            if(arrayX[i] < 0){
+                if(bounce === true){
+                    arrayChangeX[i] = -arrayChangeX[i]
+                    boxes += 1
+                    simp()
+                }else{
+                    arrayX[i] = 1350-boxWidth // More teleportation (need to take into account of box sizes tho)
+                }
+            }
+            if(arrayY[i] >= (750-boxHeight)){
+                if(bounce === true){
+                    arrayChangeY[i] = -arrayChangeY[i]
+                    boxes += 1
+                    simp()
+                }else{
+                    arrayY[i] = 0
+                }
+            }
+            if(arrayY[i] < 0){
+                if(bounce === true){
+                    arrayChangeY[i] = -arrayChangeY[i]
+                    boxes += 1
+                    simp()
+                }else{
+                    arrayY[i] = 750-boxHeight
+                }            
+            }
+            arrayX[i] += arrayChangeX[i]
+            arrayY[i] += arrayChangeY[i]
+            arrayColor[i] += 0.05
+            // Changing color here
+            ctx.fillStyle = "hsl("+arrayColor[i]+",100%, 50%, 0.3)"
+
+            // Final fillRect function here
+            ctx.fillRect(arrayX[i],arrayY[i],arrayBoxWidth[i],arrayBoxHeight[i])
+        }
+    }
+    
+</script>

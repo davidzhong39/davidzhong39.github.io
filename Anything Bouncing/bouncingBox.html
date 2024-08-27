@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #box {
+            height: 50px;
+            width: 50px;
+            background-color: red;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+        }
+        #button{
+            height: 500px;
+            width: 500px;
+            position: absolute;
+            left: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+    </div>
+    <button id="button">
+        Click here for faster
+    </button>
+</body>
+
+<script>
+    var x = 50
+    var xDirection = 1
+    var y = 50
+    var yDirection = 1
+
+    addEventListener("load", animation)
+    document.getElementById("box").addEventListener("click", moveBox)
+    document.getElementById("button").addEventListener("click", animation)
+    function moveBox() {
+        if(x<50){
+            xDirection = -xDirection
+        }
+        if(x>300){
+            xDirection = -xDirection
+        }
+        if(y<50){
+            yDirection = -yDirection
+        }
+        if(y>301){
+            yDirection = -yDirection
+        }
+        x = x + xDirection
+        y = y + yDirection
+        document.getElementById("box").style.left = x + "px"
+        document.getElementById("box").style.top = y + "px"
+    }
+    function animation(){
+        setInterval(moveBox, 1)
+    }
+</script>
+
+<html>

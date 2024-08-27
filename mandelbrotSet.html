@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandelbrot Set</title>
+    <style>
+        html{
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        /* Making the body and canvas elements have zero margins so no border shenanigans happen. Also very nicely makes the canvas cover the entire screen */
+        #body{
+            margin: 0px;
+        }
+        #canvas{
+            margin: 0px;
+        }
+    </style>
+
+</head>
+
+<body id = "body">
+    <canvas id = "canvas" style = "background-color: rgb(222, 238, 243);"></canvas>
+</body>
+
+
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    // Updates the size of the canvas to match the size of the window
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    // I'm gonna need some for loops and "i" stuff and other complicated stuff, which is totally awesome! (it's going to be hell i know it)
+    var arrayX = []
+    var arrayY = []
+
+    // Ignore these, these are for spacing the x and y coordinates
+    var t = -2
+    var u = -1
+
+    // Generating the x and y coordinates needed for the arrays (y values will be converted to imaginary numbers later)
+    for(i=0; i<=1000; i++){
+        arrayX.push(Math.round(t*1000)/1000)
+        t += 0.003
+        arrayY.push(Math.round(u*1000)/1000)
+        u += 0.002
+    }
+
+//////////////////////////////////////////////    Everything above this line is complete    //////////////////////////////////////////////////////////////////////////
+
+    // Later use I guess?
+    for(i=0; i<arrayX.length; i++){
+        runsOffToInfinity = false
+        drawCircle()
+        function drawCircle(){
+            if(runsOffToInfinity === false){
+                ctx.beginPath()
+                ctx.arc(arrayX[i], arrayY[i], 10, 0, 2 * Math.PI)
+                ctx.fillStyle = "#6495ED"
+                ctx.fill()
+            }
+        }
+    }
+
+</script>
+</html>

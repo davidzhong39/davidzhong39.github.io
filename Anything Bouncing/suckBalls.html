@@ -1,0 +1,143 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circles</title>
+    <style>
+        html{
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id = "canvas" width = "1350" height = "750" ></canvas>
+</body>
+
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////               ONLY CHANGE STUFF BELOW THIS POINT               ///////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Self-explanatory
+    var boxWidth = 0.1
+    var colorOfBackground = "black"   // Needs to be a string
+
+    // Should the boxes mark their own paths?
+    var trace = false
+        
+    // Theme of either fire or cold. If var "warm" is false, it will be cold-themed
+    var warm = true
+
+    // If bounce is false, the boxes will just teleport to the other side of the screen at the edge
+    var bounce = true
+
+    // Don't go too crazy ( 😏😋 )
+    var boxes = 50
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////               ONLY CHANGE STUFF ABOVE THIS POINT               ///////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Updating background color
+    document.body.style.backgroundColor = colorOfBackground
+
+    //Bigger Balls
+    setInterval(size, 100)
+    function size(){
+        boxWidth += 1
+    }
+
+    // Arrays for every box; 5 total arrays
+    var arrayX = []
+    var arrayY = []
+    var arrayChangeX = []
+    var arrayChangeY = []
+    var arrayColor = []
+
+
+    // Generating random numbers for position, direction, and color of each box
+    for(i=0; i<boxes; i=i+1){
+
+        // Strange width-height stuff in the random numbers so the boxes don't generate inside the borders 
+        arrayX.push(Math.random()*(1350-boxWidth)+boxWidth/2)
+        arrayY.push(Math.random()*(750-boxWidth)+boxWidth/2)
+
+        // Determines what directions each box will go towards
+        if(Math.random()<0.5){
+            arrayChangeX.push(-1)
+        }else {
+            arrayChangeX.push(1)
+        }
+        if(Math.random()<0.5){
+            arrayChangeY.push(-1)
+        }else {
+            arrayChangeY.push(1)
+        }
+
+        // Each box's color
+        if(warm === true){var fire = 0}else{var fire = 190}
+        arrayColor.push((Math.random()*70)+fire)
+    }
+
+    // Running the "change" function repeatedly. It's also sensitive to keypresses, so you can speed
+    // the boxes up just by punching the keyboard.
+    setInterval(change, 10)
+    document.addEventListener("keydown", yerr)
+    function yerr(){
+        setInterval(change, 10)
+    }
+
+    // Every box has its own unique x-position, y-position, change in the x-direction, 
+    // change in the y-direction, and color. Thus, requiring five arrays in total.
+    function change(){
+        
+        // If var "trace" is true, then the code clears the previous frame of boxes so paths aren't created
+        if(trace === true){}else{ctx.clearRect(0,0,2000,1000)}
+
+        // Calculations for each frame
+        for(i=0; i<boxes; i=i+1){
+
+            // Changing positions of each box by their own changeX and changeY
+            if(arrayX[i] >= (1350-boxWidth/2)){
+                if(bounce === true){
+                    arrayChangeX[i] = -arrayChangeX[i]  // Changing direction on collision with wall
+                }else{
+                    arrayX[i] = 0+boxWidth/2  // This arrayX[i] = 0 part makes the boxes teleport from one side to the other
+                }
+            }
+            if(arrayX[i] < 0+boxWidth/2){
+                if(bounce === true){
+                    arrayChangeX[i] = -arrayChangeX[i]
+                }else{
+                    arrayX[i] = 1350-boxWidth/2 // More teleportation (need to take into account of box sizes tho)
+                }
+            }
+            if(arrayY[i] >= (750-boxWidth/2)){
+                if(bounce === true){
+                    arrayChangeY[i] = -arrayChangeY[i]
+                }else{
+                    arrayY[i] = 0+boxWidth/2
+                }
+            }
+            if(arrayY[i] < 0+boxWidth/2){
+                if(bounce === true){
+                    arrayChangeY[i] = -arrayChangeY[i]
+                }else{
+                    arrayY[i] = 750-boxWidth/2
+                }            
+            }
+            arrayX[i] += arrayChangeX[i]
+            arrayY[i] += arrayChangeY[i]
+
+            ctx.beginPath()
+            ctx.arc(arrayX[i], arrayY[i], boxWidth/2, 0, 2 * Math.PI)
+            ctx.fillStyle = "hsl("+arrayColor[i]+",100%, 50%)"
+            ctx.fill()
+
+        }
+    }
+    
+</script>

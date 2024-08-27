@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circles Circling</title>
+    <style>
+        #canvas{
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id = "canvas" width = "1350" height = "900" ></canvas>
+</body>
+</html>
+<script>
+
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    // Color of each circle
+    var arrayColor = []
+    var color = 0
+
+    // Position of first circle
+    var arrayX = []
+    var arrayY = []
+    var xBall = 700
+    var yBall = 500
+
+    // Radius of each orbit
+    var arrayRadiusX = []
+    var arrayRadiusY = []
+    var radiusX = 100
+    var radiusY = 100
+
+    // Base spin rate I guess
+    var arraySpinX = []
+    var arraySpinY = []
+    // Don't change this; it makes weird stuff if you do
+    var spinX = 0
+    var spinY = 0
+
+    // This determines how much each spin rate changes by
+    var arraySpinRateX = []
+    var arraySpinRateY = []
+    var spinRateX = 0.01
+    var spinRateY = 0.02
+
+    // Don't go too crazy 🤪😏
+    var circles = 400
+
+
+    for(i=0;i<circles;i++){
+
+        // Setting up and changing colors
+        arrayColor.push(color)
+        color += 8
+
+        // Setting up positions of circles at the beginning
+        arrayX.push(xBall)
+        arrayY.push(yBall)
+
+        // How much the radius should decrease by between each circle
+        arrayRadiusX.push(radiusX)
+        radiusX /= 1.02
+        arrayRadiusY.push(radiusY)
+        radiusY /= 1.02
+        
+        // Base spin rate
+        arraySpinX.push(spinX)
+        arraySpinY.push(spinY)
+
+        // How much each element in arraySpinX changes by (spin rate is being changed)
+        // Rate of: C1(1), C2(1.5), C3(2);  Spin rate would be 0.5
+        arraySpinRateX.push(spinRateX)
+        spinRateX += 0.01
+        arraySpinRateY.push(spinRateY)
+        spinRateY += 0.01
+
+    }
+
+    setInterval(change, 10)
+    function change(){
+        ctx.clearRect(0,0,1900,933)
+        for(i=0;i<circles;i++){
+
+            arraySpinX[i] += arraySpinRateX[i+1]
+            arraySpinY[i] += arraySpinRateY[i+1]
+
+            arrayX[i+1] = arrayX[i] + arrayRadiusX[i]*Math.sin(arraySpinX[i])
+            arrayY[i+1] = arrayY[i] - arrayRadiusY[i]*Math.cos(arraySpinY[i])
+
+            ctx.beginPath()
+            ctx.arc(arrayX[i], arrayY[i], 10, 0, 2*Math.PI)
+            ctx.fillStyle = "hsl("+arrayColor[i]+",100%, 50%)"
+            ctx.fill()
+        }
+    }
+
+
+</script>

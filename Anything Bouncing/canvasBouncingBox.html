@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html{
+            background-color: black;
+            overflow-x: hidden;
+            /* overflow-y: hidden; */
+        }
+    </style>
+</head>
+<body>
+    <canvas id = "canvas" width = "1400" height = "500" ></canvas>
+    <button id = "faster">
+        😱😱😱!!FASTER!!!!!!!😱😱😱
+    </button>
+</body>
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    var x = 0
+    var changeX = 1
+    var y = 0
+    var changeY = 1
+
+    var width = 40
+    var height = 40
+    
+    var w = 254
+    var wChange = 0.01
+
+    var z = 0
+
+    document.getElementById("faster").addEventListener("click", yerr)
+    function yerr(){
+        setInterval(change, 1)
+        setInterval(color, 1)
+        setInterval(main, 100)
+    }
+
+    // Changing x and y positions
+    setInterval(change, 1)
+    function change(){
+        if(x >= (1350-width)){
+            changeX = -changeX
+            z += 1
+        }
+        if(x < 0){
+            changeX = -changeX
+            z += 1
+        }
+        if(y >= (350-height)){
+            changeY = -changeY
+            z += 1
+        }
+        if(y < 0){
+            changeY = -changeY
+            z += 1
+        }
+        x += changeX
+        y += changeY
+    }
+
+    // Changing color
+    setInterval(color,1)
+    function color(){
+        if(w > 359){
+            wChange = -wChange
+        }
+        if(w < 0){
+            wChange = -wChange
+        }
+        w = w + wChange
+    }
+    
+    // Updating everything
+    setInterval(main,100)
+    function main(){
+        ctx.fillStyle = "hsl("+w+",100%, 50%, 0.2)"
+        ctx.fillRect(x,y,width,height)
+        if(z > 13){
+            ctx.clearRect(0,0,2000,2000)
+            z = 0
+        }
+    }
+ 
+</script>

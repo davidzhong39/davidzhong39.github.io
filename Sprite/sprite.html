@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peanut Suckballs Gok</title>
+    <style>
+        html{
+            background-color: black;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        @keyframes latral{
+            0%{
+                width:10px;
+                font-size:60px;
+            }
+            100%{
+                width:500px;
+                font-size:20px;
+            }
+        }
+        #div{
+            animation-name: latral;
+            animation-duration: 0.6s;
+            animation-iteration-count: infinite;
+        }
+        #div1{
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id = "canvas" width = "3000" height = "1700"></canvas>
+    <img hidden src = "peanut.png" id = "peanut">
+    <img hidden src = "peanut2.png" id = "peanut2">
+    <img hidden src = "gokuHair.png" id = "gokuHair">
+    <img hidden src = "sanic.png" id = "sanic">
+    <img hidden src = "sanic2.png" id = "sanic2">
+    <img hidden src = "hand.png" id = "hand">
+    <img hidden src = "hand2.png" id = "hand2">
+
+</body>
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+
+    document.body.style.backgroundColor = "white"
+
+            ///// Here should be everything sprite stuff /////
+
+    // Set to create an image
+    var img = document.getElementById("peanut")
+    var goku = document.getElementById("gokuHair")
+    var sanic = document.getElementById("sanic")
+    var hand = document.getElementById("hand")
+    var hand2 = document.getElementById("hand2")
+
+    var x = 100
+    var y = 100
+    var width = 200
+    var height = 200
+
+    var up = false
+    var down = false
+    var left = false
+    var right = false
+    var facingLeft = false
+    var facingRight = true
+    var shift = false
+    var control = false
+    var speed = 1
+    var gokuPower = 3
+    var sanicPower = 3
+    var GOKUSANICPOWER = false
+
+    // Wanted to make movement speed and "quickness" of animation connected but you can change if you want
+    var frameRate = 2
+    var suckballs = 1000/frameRate
+    var crop = 0
+
+    setInterval(cropSprite, suckballs)
+    setInterval(gokuAndSanicCheck, 10)
+    setInterval(movement, 10)
+    setInterval(facing, 10)
+    setInterval(backgroundColor, 10)
+    setInterval(drawSprite, 5)
+
+    // Determines where on the original png images of "peanut" to crop at
+    function cropSprite(){
+        if(crop === 512){
+            crop = 0
+        } else if(crop === 0){
+            crop = 512
+        }
+    }
+
+    // Stuff for determining keypresses and whether you're facing right or left (and whether you're pressing shift or not)
+    document.addEventListener("keydown", keyDown)
+    document.addEventListener("keyup", keyUp)
+    function keyDown(e){
+        if(e.key === "ArrowUp" || e.key === "w" || e.key === "W"){
+            up = true
+        }
+        if(e.key === "ArrowDown" || e.key === "s" || e.key === "S"){
+            down = true
+        }
+        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A"){
+            left = true
+            facingLeft = true
+            facingRight = false
+        }
+        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D"){
+            right = true
+            facingRight = true
+            facingLeft = false
+        }
+        if(e.key === "Shift"){
+            shift = true
+        }
+        if(e.key === "Control"){
+            control = true
+        }
+    }
+    function keyUp(e){
+        if(e.key === "ArrowUp" || e.key === "w" || e.key === "W"){
+            up = false
+        }
+        if(e.key === "ArrowDown" || e.key === "s" || e.key === "S"){
+            down = false
+        }
+        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A"){
+            left = false
+        }
+        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D"){
+            right = false
+        }
+        if(e.key === "Shift"){
+            shift = false
+        }    
+        if(e.key === "Control"){
+            control = false
+        }
+    }
+
+    // Checks if both the divine powers of the Sanic and Goku dieties are unleashed for our mortal eyes
+    function gokuAndSanicCheck(){
+        if(control === true && shift === true){
+            GOKUSANICPOWER = true
+        }else{
+            GOKUSANICPOWER = false
+        }
+    }
+
+    // Stuff that actually moves the sprite
+    function movement(){
+        if(shift === true && control === true){
+            if(up === true){
+                y -= speed*gokuPower*sanicPower
+            }
+            if(down === true){
+                y += speed*gokuPower*sanicPower
+            }
+            if(left === true){
+                x -= speed*gokuPower*sanicPower
+            }
+            if(right === true){
+                x += speed*gokuPower*sanicPower
+            }
+        }else if(shift === true){
+            if(up === true){
+                y -= speed*gokuPower
+            }
+            if(down === true){
+                y += speed*gokuPower
+            }
+            if(left === true){
+                x -= speed*gokuPower
+            }
+            if(right === true){
+                x += speed*gokuPower
+            }
+        }else if(control === true){
+            if(up === true){
+                y -= speed*sanicPower
+            }
+            if(down === true){
+                y += speed*sanicPower
+            }
+            if(left === true){
+                x -= speed*sanicPower
+            }
+            if(right === true){
+                x += speed*sanicPower
+            }
+        }else{
+            if(up === true){
+                y -= speed
+            }
+            if(down === true){
+                y += speed
+            }
+            if(left === true){
+                x -= speed
+            }
+            if(right === true){
+                x += speed
+            }
+        }
+    }
+
+    // Which direction is the sprite facing? (left and right)
+    function facing(){
+        if(facingLeft === true){
+            img = document.getElementById("peanut2")
+            sanic = document.getElementById("sanic2")
+        }
+        if(facingRight === true){
+            img = document.getElementById("peanut")
+            sanic = document.getElementById("sanic")
+        }
+    }
+
+    // Changes the background color of "body" tag based on which diety is being worshipped
+    function backgroundColor(){
+        if(control === true && shift === true){
+            document.body.style.backgroundColor = "black"
+        }else if(control === true){
+            document.body.style.backgroundColor = "rgb(70, 124, 206)"
+        }else if(shift === true){
+            document.body.style.backgroundColor = "rgb(233, 233, 115)"
+        }else{
+            document.body.style.backgroundColor = "white"
+        }
+    }
+
+
+/////////////////////////////////////////////////////////////////
+////////// CODE FOR BACKGROUND CIRCLES BELOW ////////////////////
+/////////////////////////////////////////////////////////////////
+
+    // Color of each circle
+    var arrayColor = []
+    var color = 0
+
+    // Position of first circle
+    var arrayX = []
+    var arrayY = []
+    var xBall = 700
+    var yBall = 500
+
+    // Radius of each orbit
+    var arrayRadiusX = []
+    var arrayRadiusY = []
+    var radiusX = 200
+    var radiusY = 70
+
+    // Base spin rate I guess
+    var arraySpinX = []
+    var arraySpinY = []
+    // Don't change this; it makes weird stuff if you do
+    var spinX = 0
+    var spinY = 0
+
+    // This determines how much each spin rate changes by
+    var arraySpinRateX = []
+    var arraySpinRateY = []
+    var spinRateX = 0.002
+    var spinRateY = 0.002
+    // This is an auxilliary array for when both Goku and Sanic are activated
+    var arraySpinRateX2 = []
+    var arraySpinRateY2 = []
+
+    // Don't go too crazy 🤪😏
+    var circles = 40
+
+
+    for(i=0;i<circles;i++){
+
+        // Setting up and changing colors
+        arrayColor.push(color)
+        color += 6
+
+        // Setting up positions of circles at the beginning
+        arrayX.push(xBall)
+        arrayY.push(yBall)
+
+        // How much the radius should decrease by between each circle
+        arrayRadiusX.push(radiusX)
+        radiusX *= 1.02
+        arrayRadiusY.push(radiusY)
+        radiusY *= 1.02
+        
+        // Base spin rate
+        arraySpinX.push(spinX)
+        arraySpinY.push(spinY)
+
+        // How much each element in arraySpinX changes by (spin rate is being changed)
+        // Rate of: C1(1), C2(1.5), C3(2);  Spin rate would be 0.5
+        arraySpinRateX.push(spinRateX)
+        spinRateX += 0.001
+        arraySpinRateY.push(spinRateY)
+        spinRateY += 0.001
+
+        arraySpinRateX2[i] = arraySpinRateX[i]*10
+        arraySpinRateY2[i] = arraySpinRateY[i]*10
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////////////////////////  DRAWS EVERYTHING ///////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function drawSprite(){
+        // if()
+        // ctx.clearRect(0,0,2000,2000)
+        // Background Circles here
+        for(i=0;i<circles;i++){
+
+            if(GOKUSANICPOWER === true){
+                arraySpinX[i] += arraySpinRateX2[i+1]
+                arraySpinY[i] += arraySpinRateY2[i+1]
+            }else{
+                arraySpinX[i] += arraySpinRateX[i+1]
+                arraySpinY[i] += arraySpinRateY[i+1]
+            }
+
+            arrayX[i+1] = arrayX[i] + arrayRadiusX[i]*Math.sin(arraySpinX[i])
+            arrayY[i+1] = arrayY[i] - arrayRadiusY[i]*Math.cos(arraySpinY[i])
+
+            ctx.beginPath()
+            ctx.arc(arrayX[i+1], arrayY[i+1], 50, 0, 2*Math.PI)
+            ctx.fillStyle = "hsl("+arrayColor[i]+",100%, 50%)"
+            ctx.fill()
+        }
+
+        // SPAWNS THE HOLY HANDS
+        if(GOKUSANICPOWER === true){
+            ctx.drawImage(hand,x+(width*(3/10))+50,y-(height*(3/10)),width*1.5,height*1.5)
+            ctx.drawImage(hand2,x-(width*(7/10))-50,y-(height*(3/10)),width*1.5,height*1.5)
+        }
+
+        // This peanut sprite
+        ctx.drawImage(img,crop,0,512,512,x,y,width,height)
+
+         // SPAWNS IN SANIC
+        if(control === true){
+            if(facingRight === true){
+                ctx.drawImage(sanic,x+(width*(3/20)),y-(height*(1/5)),width*(7/10),height*(7/10))
+            } else if(facingLeft === true){
+                ctx.drawImage(sanic,x+(width*(3/20)),y-(height*(1/5)),width*(7/10),height*(7/10))
+            }
+        }
+
+        // SPAWNS IN GOKU
+        if(shift === true){
+            if(facingRight === true){
+                ctx.drawImage(goku,x+(width/3),y-(height*(9/30)),width*(2/3),height*(2/3))
+            } else if(facingLeft === true){
+                ctx.drawImage(goku,x-(width*(1/10)),y-(height*(9/30)),width*(2/3),height*(2/3))
+            }
+        }
+    }
+   
+
+</script>

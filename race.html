@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    #car{
+        width: 170px;
+        position: absolute;
+        left: 100px;
+        top: 100px;
+        opacity: 50%;
+    }
+    #ball{
+        width: 170px;
+        position: absolute;
+        left: 100px;
+        top: 400px;
+        opacity: 50%;
+    }
+</style>
+</head>
+
+<body>
+    <img id = "car" src ="https://m.media-amazon.com/images/I/61X6TToE4fL.__AC_SX300_SY300_QL70_FMwebp_.jpg">
+    <img id = "ball" src = "https://m.media-amazon.com/images/I/71gRTanSIhL.__AC_SX300_SY300_QL70_FMwebp_.jpg">
+</body>
+<script>
+    var xCar = 100
+    var yCar = 100
+    var xBall = 100 
+    var yBall = 400
+
+    document.addEventListener("keydown", carMove)
+    function carMove(event){
+        //moving the car
+        // if(event.key === "w"){
+        //     yCar = yCar - 100
+        //     document.getElementById("car").style.top = yCar + "px"
+        // }
+        // if(event.key === "a"){
+        //     xCar = xCar - 100
+        //     document.getElementById("car").style.left = xCar + "px"
+        // }
+        // if(event.key === "s"){
+        //     yCar = yCar + 100
+        //     document.getElementById("car").style.top = yCar + "px"
+        // }
+        if(event.key === "d"){
+            xCar = xCar + 10
+            document.getElementById("car").style.left = xCar + "px"
+        }
+        //moving the ball
+        // if(event.key === "ArrowUp"){
+        //     yBall = yBall - 100
+        //     document.getElementById("ball").style.top = yBall + "px"
+        // } 
+        // if(event.key === "ArrowLeft"){
+        //     xBall = xBall - 100
+        //     document.getElementById("ball").style.left = xBall + "px"
+        // }
+        // if(event.key === "ArrowDown"){
+        //     yBall = yBall + 100
+        //     document.getElementById("ball").style.top = yBall + "px"
+        // }
+        if(event.key === "ArrowRight"){
+            xBall = xBall + 10
+            document.getElementById("ball").style.left = xBall + "px"
+        }
+        console.log(event)
+    }
+
+</script>
