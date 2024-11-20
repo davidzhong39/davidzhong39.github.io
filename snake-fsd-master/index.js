@@ -68,9 +68,9 @@ function init() {
 function update() {
   // TODO 5b: Fill in the update function's code block
   moveSnake();
-  if (hasHitWall() || hasCollidedWithSnake()) {
-    endGame();
-  }
+  // if (hasHitWall() || hasCollidedWithSnake()) {
+  //   endGame();
+  // }
   if (hasCollidedWithApple()) {
     handleAppleCollision();
   }

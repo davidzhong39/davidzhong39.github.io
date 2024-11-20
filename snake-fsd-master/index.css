@@ -29,6 +29,7 @@ body {
 
 #snake-head {
   background-color: darkgreen;
+  z-index: 3
 }
 
 .apple {
