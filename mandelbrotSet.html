@@ -28,8 +28,8 @@
 
 <script>
     // Constructing the canvas
-    var canvas = document.getElementById("canvas")
-    var ctx = canvas.getContext("2d")
+    let canvas = document.getElementById("canvas")
+    let ctx = canvas.getContext("2d")
 
     // Updates the size of the canvas to match the size of the window
     canvas.width = window.innerWidth
@@ -37,11 +37,10 @@
 
 
     // Fundamental variables
-    var points = []
-    var point = {}
+
 
         // How much detail you want in the Mandelbrot Set
-    var resolution = 1000
+    let resolution = 1000
 
     
 
@@ -53,35 +52,36 @@
 
     startEverything()
     function startEverything(){
-        makeGrid()
+        makeGrid(resolution, -2, 2, -2, 2)
     }
     
     ////////////////////////////////////////////////////////////////
     //////////////////////// HELPER FUNCTIONS //////////////////////
     ////////////////////////////////////////////////////////////////
 
-    
-    function makeGrid(){
+    // This function will make all the points
+        // The last four parameters are the borders for the grid
+    function makeGrid(resolution, xMin, xMax, yMin, yMax){
+        let points = []
+        let xStep = (xMax - xMin) / resolution;
+        let yStep = (yMax - yMin) / resolution;
+
         // Grid starts at x = -2 and y = -2 in the coordinate grid
-        var xPosition = -2
-        var yPosition = -2
-        for(i=0;i<=resolution;i++){
-            for(i=0;i<=resolution;i++){
-                point.yPosition = yPosition.toFixed(3)
-                point.xPosition = xPosition.toFixed(3)
+        let xPosition = xMin
+        for(let i=0;i<=resolution;i++){
+            let yPosition = yMin
+            for(let j=0;j<=resolution;j++){
+                let point = {}
+                point.y = Math.round(yPosition*1000)/1000
+                point.x = Math.round(xPosition*1000)/1000
                 points.push(point)
-                yPosition += 4/resolution
+                yPosition += yStep
             }
-            xPosition += 4/resolution
+            xPosition += xStep
         }
         console.log(points)
+        return points
     }
-
-
-
-
-
-
    
 
 </script>
