@@ -35,9 +35,15 @@
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
+    // This saves the transformations and scaling state of the canvas. 
+    // Since this is done at the very beginning, it just saves the default state.
+    ctx.save()
 
     // Fundamental variables
-
+    let xMin = -2
+    let xMax = 1
+    let yMin = -1.5
+    let yMax = 1.5
 
         // How much detail you want in the Mandelbrot Set
     let resolution = 1000
@@ -52,7 +58,9 @@
 
     startEverything()
     function startEverything(){
-        makeGrid(resolution, -2, 2, -2, 2)
+        let points = makeGrid(resolution, xMin, xMax, yMin, yMax)
+        testPoints(points)
+        drawPoints(points, xMin, xMax, yMin, yMax)
     }
     
     ////////////////////////////////////////////////////////////////
@@ -82,6 +90,82 @@
         console.log(points)
         return points
     }
+
+    function testPoints(points){
+        for(let i=0;i<points.length; i++){
+            let x = points[i].x
+            let y = points[i].y
+            let boolean = testIndividualPoint(x,y)
+            if(boolean === true){
+                points[i].isPartOfMandelbrotSet = true
+            } else{
+                points[i].isPartOfMandelbrotSet = false
+            }
+        }
+    }
+
+    function testIndividualPoint(cX,cY){
+        let x = 0
+        let y = 0
+        for(let i=0;i<100;i++){
+
+            // My previous attempt at conceptualizing the imaginary plane as a regular cartesian plane
+            // x = x ** 2
+            // y = y ** 2
+            // x += cX
+            // y += cY
+
+            // I have no idea how this algebra works out for computing points on the Mandelbrot Set with all the
+            // imaginary numbers but if it works it works.
+            let newX = (x * x - y * y) + cX; // Real part
+            let newY = (2 * x * y) + cY;     // Imaginary part
+            x = newX;
+            y = newY;
+
+
+            // If at any time the point goes outside a circle of radius 2, it's not part of the Mandelbrot Set 
+            if((x**2) + (y**2) > 4){  // The 2 is squared because a^2 + b^2 = ----->  c^2  <-----
+                // NOT part of the Mandelbrot Set
+                return false
+            }
+        }
+        // Part of the Mandelbrot Set
+        return true
+    }
+
+    function drawPoints(points, xMin, xMax, yMin, yMax){
+        // Do your scaling and transformations here (X)
+        let xStep = xMax - xMin
+        let yStep = yMax - yMin
+
+        // Hardcoded but whatever
+        let scaleValue = 200
+
+        ctx.translate((window.innerWidth/2)+Math.abs((Math.abs(xMin)-Math.abs(xMax))/2),(window.innerHeight/2)+Math.abs((Math.abs(yMin)-Math.abs(yMax))/2))
+        ctx.scale(scaleValue, -scaleValue)
+        
+        for(let i=0;i<points.length;i++){
+            if(points[i].isPartOfMandelbrotSet === true){
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, 0.003, 0, Math.PI * 2); // x, y, radius, startAngle, endAngle
+                ctx.fill();
+            }
+        }
+        // This red dot denotes the origin (0,0) of the canvas with the transformations and scalings
+        ctx.fillStyle = "red"
+        ctx.beginPath();
+        ctx.arc(0, 0, 0.01, 0, Math.PI * 2); // x, y, radius, startAngle, endAngle
+        ctx.fill();
+
+        // This is a blue border around the possible points
+            // Set the stroke color and line width
+        ctx.strokeStyle = "blue"; // Border color
+        ctx.lineWidth = 0.01;        // Border thickness
+        ctx.strokeRect(xMin, -yMax, xStep, yStep); // Draw border
+    }
+
+    
+
    
 
 </script>
