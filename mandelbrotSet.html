@@ -48,6 +48,9 @@
         // How much detail you want in the Mandelbrot Set
     let resolution = 1000
 
+        // How many times to test a point to see if it spirals out of control or not (1000 recommended to be the max)
+    let numSpiraling = 100
+
     
 
 
@@ -60,7 +63,11 @@
     function startEverything(){
         let points = makeGrid(resolution, xMin, xMax, yMin, yMax)
         testPoints(points)
-        drawPoints(points, xMin, xMax, yMin, yMax)
+        drawMandelbrotSet(points, xMin, xMax, yMin, yMax)
+        testPointsColors(points)
+        drawMandelbrotColors(points)
+        drawRedDot()
+        drawBorder(xMin, xMax, yMin, yMax)
     }
     
     ////////////////////////////////////////////////////////////////
@@ -95,8 +102,7 @@
         for(let i=0;i<points.length; i++){
             let x = points[i].x
             let y = points[i].y
-            let boolean = testIndividualPoint(x,y)
-            if(boolean === true){
+            if(testIndividualPoint(x,y)){
                 points[i].isPartOfMandelbrotSet = true
             } else{
                 points[i].isPartOfMandelbrotSet = false
@@ -107,9 +113,9 @@
     function testIndividualPoint(cX,cY){
         let x = 0
         let y = 0
-        for(let i=0;i<100;i++){
+        for(let i=0;i<numSpiraling;i++){
 
-            // My previous attempt at conceptualizing the imaginary plane as a regular cartesian plane
+            // My previous (futile) attempt at conceptualizing the imaginary plane as a regular cartesian plane
             // x = x ** 2
             // y = y ** 2
             // x += cX
@@ -122,7 +128,6 @@
             x = newX;
             y = newY;
 
-
             // If at any time the point goes outside a circle of radius 2, it's not part of the Mandelbrot Set 
             if((x**2) + (y**2) > 4){  // The 2 is squared because a^2 + b^2 = ----->  c^2  <-----
                 // NOT part of the Mandelbrot Set
@@ -133,11 +138,51 @@
         return true
     }
 
-    function drawPoints(points, xMin, xMax, yMin, yMax){
-        // Do your scaling and transformations here (X)
-        let xStep = xMax - xMin
-        let yStep = yMax - yMin
+    function testPointsColors(points){
+        // Tests every point (that isn't part of the mandelbrot set) to see at what time a selected point spirals out of control
+        // FYI the code below is basically copy and paste of the testIndividualPoint function
+        for(let i=0; i<points.length; i++){
+            if(points[i].isPartOfMandelbrotSet === false){
+                let cX = points[i].x
+                let cY = points[i].y
+                let x = 0
+                let y = 0
+                let numberThatRepresentsColor = 0
+                for(let j=0;j<numSpiraling;j++){
+                    let newX = (x * x - y * y) + cX;
+                    let newY = (2 * x * y) + cY;
+                    x = newX;
+                    y = newY;
+                    if((x**2) + (y**2) > 4){
+                        // This is where the actual color-assigning to each point is taking place
+                            // The closer the coefficients are to 1, the nearer the color is to the black part of the Mandelbrot Set
+                            // The closer the coefficients are to 0, the nearer the color is to the edge of the border
+                        if(numberThatRepresentsColor <= numSpiraling*0.10){
+                            points[i].color = 1
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.12){
+                            points[i].color = 2
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.15){
+                            points[i].color = 3
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.18){
+                            points[i].color = 4
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.21){
+                            points[i].color = 5
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.4){
+                            points[i].color = 6
+                        } else if(numberThatRepresentsColor <= numSpiraling*0.5){
+                            points[i].color = 7
+                        } else if(numberThatRepresentsColor <= numSpiraling*1.0){
+                            points[i].color = 8
+                        }
+                    }
+                    numberThatRepresentsColor += 1
+                }
+            }   
+        }
+    }
 
+    function drawMandelbrotSet(points, xMin, xMax, yMin, yMax){
+        // Do your scaling and transformations here
         // Hardcoded but whatever
         let scaleValue = 200
 
@@ -147,16 +192,69 @@
         for(let i=0;i<points.length;i++){
             if(points[i].isPartOfMandelbrotSet === true){
                 ctx.beginPath();
-                ctx.arc(points[i].x, points[i].y, 0.003, 0, Math.PI * 2); // x, y, radius, startAngle, endAngle
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2); // x, y, radius, startAngle, endAngle
                 ctx.fill();
             }
         }
+    }
+
+    function drawMandelbrotColors(points){
+        for(let i=0; i<points.length;i++){
+             if(points[i].color === 1){
+                ctx.fillStyle = "rgb(255,0,0)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 2){
+                ctx.fillStyle = "rgb(255,120,0)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 3){
+                ctx.fillStyle = "rgb(255,200,0)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 4){
+                ctx.fillStyle = "rgb(255,255,0)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 5){
+                ctx.fillStyle = "rgb(100,255,0)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 6){
+                ctx.fillStyle = "rgb(0,120,120)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 7){
+                ctx.fillStyle = "rgb(0,0,120)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             } else if(points[i].color === 8){
+                ctx.fillStyle = "rgb(0,0,255)"
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, (xMax-xMin)/resolution/2, 0, Math.PI * 2)
+                ctx.fill();
+             }
+        }
+    }
+
+    function drawRedDot(){
         // This red dot denotes the origin (0,0) of the canvas with the transformations and scalings
         ctx.fillStyle = "red"
         ctx.beginPath();
         ctx.arc(0, 0, 0.01, 0, Math.PI * 2); // x, y, radius, startAngle, endAngle
         ctx.fill();
+    }
 
+    function drawBorder(xMin, xMax, yMin, yMax){
+        let xStep = xMax - xMin
+        let yStep = yMax - yMin
         // This is a blue border around the possible points
             // Set the stroke color and line width
         ctx.strokeStyle = "blue"; // Border color
