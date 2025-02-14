@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Recursive Bouncing Box</title>
+    <style>
+        html{
+            /* Used to prevent any scrolling up and down or left and right */
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+
+<body id = "body">
+    <!-- Builds the canvas in HTML that conforms to the size of the window it's in  -->
+    <canvas id = "canvas" width = window.innerWidth height = window.innerHeight ></canvas>
+</body>
+</html>
+
+<script>
+
+    // Makes the body tag in HTML to *not* have a margin so the canvas that's inside the body doesn't stick
+    // out over the edge of the window
+    document.getElementById("body").style.margin = "0px"
+
+    // Builds the canvas in javascript
+    let canvas = document.getElementById("canvas")
+    let ctx = canvas.getContext("2d")
+
+    // Adjusts the canvas to entirely fit the window
+    document.getElementById("canvas").width = window.innerWidth
+    document.getElementById("canvas").height = window.innerHeight
+
+    //////// Starting variables ////////
+    let x = 100
+    let y = 100
+    let xSpeed = 1
+    let ySpeed = 1
+    let boxWidth = 400
+    let boxHeight = 400
+    let boundingWidth = window.innerWidth
+    let boundingHeight = window.innerHeight
+    let color = 50
+
+    // Starts running everything repeatedly
+    setInterval(main, 20)
+    function main(){
+        movement()
+        draw()
+    }
+
+    function movement(){
+        if(x<0 || x>boundingWidth){
+            xSpeed = -xSpeed
+        }
+        if(y<0 || y>boundingHeight){
+            ySpeed = -ySpeed
+        }
+        x += xSpeed
+        y += ySpeed
+    }
+
+    function draw(){
+        ctx.fillStyle = "hsl("+color+",100%, 50%, 1)"
+        ctx.fillRect(x,y,boxWidth,boxHeight)   
+    }
+
+
+</script>
