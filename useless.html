@@ -1,0 +1,13 @@
+if(child.x > child.boundingWidth - child.width + parent.x){    
+    if(isPositive(child.xSpeed) === true && isPositive(parent.xSpeed) === true){
+        child.xSpeed = -child.xSpeed + parent.xSpeed
+    } else if(isPositive(child.xSpeed) === true && isPositive(parent.xSpeed) === false){
+        child.xSpeed = -child.xSpeed + parent.xSpeed
+        child.x -= parent.xSpeed
+    } else if(isPositive(child.xSpeed) === false && isPositive(parent.xSpeed) === true){
+        // Impossible case; the parent box moves to the right as the child box moves 
+        // to the left and they collide on the right side, which is not possible
+    } else if(isPositive(child.xSpeed) === false && isPositive(parent.xSpeed) === false){
+        child.xSpeed = -child.xSpeed + parent.xSpeed
+    }
+}

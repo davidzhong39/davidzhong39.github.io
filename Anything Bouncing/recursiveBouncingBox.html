@@ -14,15 +14,14 @@
 </head>
 
 <body id = "body">
-    <!-- Builds the canvas in HTML that conforms to the size of the window it's in  -->
-    <canvas id = "canvas" width = window.innerWidth height = window.innerHeight ></canvas>
+    <canvas id = "canvas"></canvas>
 </body>
 </html>
 
 <script>
 
-    // Makes the body tag in HTML to *not* have a margin so the canvas that's inside the body doesn't stick
-    // out over the edge of the window
+    // Makes the body tag in HTML to *not* have a margin so the canvas that's inside 
+    // the body doesn't stick out over the edge of the window
     document.getElementById("body").style.margin = "0px"
 
     // Builds the canvas in javascript
@@ -33,39 +32,187 @@
     document.getElementById("canvas").width = window.innerWidth
     document.getElementById("canvas").height = window.innerHeight
 
-    //////// Starting variables ////////
-    let x = 100
-    let y = 100
-    let xSpeed = 1
-    let ySpeed = 1
-    let boxWidth = 400
-    let boxHeight = 400
-    let boundingWidth = window.innerWidth
-    let boundingHeight = window.innerHeight
-    let color = 50
+    ///////////////////////////////  Setting Up  ////////////////////////////////////
+    let box = {
+        x: 10,
+        y: 10,
+        xSpeed: 20,
+        ySpeed: 20,
+        width: 170,
+        height: 173,
+        boundingWidth: window.innerWidth,
+        boundingHeight: window.innerHeight,
+        color: 0,
+        leftCollision: false,
+        rightCollision: false,
+        topCollision: false,
+        bottomCollision: false,
+    }
 
+    let boxes = [box]  // If repeat is more than 0, then more recursive boxes will be pushed into this boxes array
+
+    // This is the most important variable for determining recursion
+    let repeat = 2000
+
+    // Creates all of the smaller boxes inside the main box
+    createRecursiveBoxes(box, repeat)
+    function createRecursiveBoxes(box, repeat){
+        // Setting up a "child box"
+        let smollBox = {
+            // Any of these values can be custom changed for varying effects
+            x: box.x + box.xSpeed * 2 + 0,    // I put in box.xSpeed so child boxes are able to stay inside their parent boxes 
+            y: box.y + box.ySpeed * 1 + 0,
+            xSpeed: box.xSpeed + 0,
+            ySpeed: box.ySpeed + 0,
+            width: box.width * 0.998,
+            height: box.height * 0.998,
+            boundingWidth: box.width,
+            boundingHeight: box.height,
+            color: box.color + 10,
+            leftCollision: false,
+            rightCollision: false,
+            topCollision: false,
+            bottomCollision: false,
+        }
+
+        // Pre-Base (?) case when there is no more recursive boxes
+        if(repeat <= 0){
+            return "No more boxes here"
+        } else if(repeat === 1){  // Base case
+            boxes.push(smollBox)
+        } else{                   // Recursive case
+            boxes.push(smollBox)
+            createRecursiveBoxes(smollBox, repeat - 1)
+        }
+    }
+
+    ////////////////  Core Logic  ////////////////
     // Starts running everything repeatedly
-    setInterval(main, 20)
-    function main(){
-        movement()
-        draw()
+    requestAnimationFrame(() => main(box))
+    function main(box){
+        ctx.clearRect(0,0,canvas.width,canvas.height)  // Clears everything
+        originalBoxCollision(box)  // Handles window-wall collisions of the main box
+        originalBoxMovement(box)   // Handles movement of the main box
+
+        insideBoxesCollisions(boxes)  // Handles all collisions of the inner boxes
+        insideBoxesMovement(boxes)    // Handles all movements of the inner boxes
+
+        drawEverything(boxes)      // Draws everything in the boxes array
+        requestAnimationFrame(() => main(box))
     }
 
-    function movement(){
-        if(x<0 || x>boundingWidth){
-            xSpeed = -xSpeed
+    ////////////////  Helper Functions  ////////////////
+
+
+    function originalBoxCollision(box){
+        if(box.x < 0 || box.x > box.boundingWidth - box.width){
+            box.xSpeed = -box.xSpeed
         }
-        if(y<0 || y>boundingHeight){
-            ySpeed = -ySpeed
+        if(box.y < 0 || box.y > box.boundingHeight - box.height){
+            box.ySpeed = -box.ySpeed
         }
-        x += xSpeed
-        y += ySpeed
     }
 
-    function draw(){
-        ctx.fillStyle = "hsl("+color+",100%, 50%, 1)"
-        ctx.fillRect(x,y,boxWidth,boxHeight)   
+    function originalBoxMovement(box){
+        box.x += box.xSpeed
+        box.y += box.ySpeed
+    }
+
+    function drawEverything(boxes){
+        for(i=0; i<boxes.length; i++){
+            ctx.fillStyle = "hsl("+boxes[i].color+",100%, 50%, 1)"
+            ctx.fillRect(boxes[i].x,boxes[i].y,boxes[i].width,boxes[i].height)
+        }
+    }
+
+    function insideBoxesCollisions(boxes){
+        for(i=1; i<boxes.length; i++){    // "i" starts at 1 instead of 0 because 0 is the main box, which is already being handled by originalBoxCollision 
+            let child = boxes[i]
+            let parent = boxes[i-1]
+
+            if(child.x < parent.x){
+                if(child.leftCollision === false){
+                    child.xSpeed = -child.xSpeed
+                }
+                child.leftCollision = true
+            } else{
+                child.leftCollision = false
+            }
+
+            if(child.x + child.width > parent.x + parent.width){
+                if(child.rightCollision === false){
+                    child.xSpeed = -child.xSpeed
+                }
+                child.rightCollision = true
+            } else{
+                child.rightCollision = false
+            }
+
+            if(child.y < parent.y){
+                if(child.topCollision === false){
+                    child.ySpeed = -child.ySpeed
+                }
+                child.topCollision = true
+            } else{
+                child.topCollision = false
+            }
+
+            if(child.y + child.height > parent.y + parent.width){
+                if(child.bottomCollision === false){
+                    child.ySpeed = -child.ySpeed
+                }
+                child.bottomCollision = true
+            } else{
+                child.bottomCollision = false
+            }
+
+            // Collision on the left wall
+            // if(child.x < parent.x){    
+            //     if(child.xSpeed >= 0 && parent.xSpeed >= 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed
+            //     } else if(child.xSpeed >= 0 && parent.xSpeed < 0){
+            //         // Impossible case; the parent box moves to the left as the child box moves 
+            //         // to the right and they collide on the left side, which is not possible
+            //     } else if(child.xSpeed < 0 && parent.xSpeed >= 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed //
+            //         child.x += parent.xSpeed + child.xSpeed
+            //     } else if(child.xSpeed < 0 && parent.xSpeed < 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed
+            //     }
+            // }
+
+            // Collision on the right wall
+            // if(child.x > child.boundingWidth - child.width + parent.x){    
+            //     if(child.xSpeed >= 0 && parent.xSpeed >= 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed
+            //     } else if(child.xSpeed >= 0 && parent.xSpeed < 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed
+            //         child.x -= parent.xSpeed - child.xSpeed  //
+            //     } else if(child.xSpeed < 0 && parent.xSpeed >= 0){
+            //         // Impossible case; the parent box moves to the right as the child box moves 
+            //         // to the left and they collide on the right side, which is not possible
+            //     } else if(child.xSpeed < 0 && parent.xSpeed < 0){
+            //         child.xSpeed = -child.xSpeed + parent.xSpeed
+            //     }
+            // }
+            // if(boxes[i].y < boxes[i-1].y){                                              // Collision on the top wall
+            //     boxes[i].ySpeed = -boxes[i].ySpeed
+            // }
+            // if(boxes[i].y > boxes[i].boundingHeight - boxes[i].height + boxes[i-1].y){  // Collision on the bottom wall
+            //     boxes[i].ySpeed = -boxes[i].ySpeed
+            // }
+        }
+    }
+
+    function insideBoxesMovement(boxes){
+        for(i=1;i<boxes.length; i++){
+            boxes[i].x += boxes[i].xSpeed
+            boxes[i].y += boxes[i].ySpeed
+        }
     }
 
 
+
+
+    
 </script>

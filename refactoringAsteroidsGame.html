@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=800, initial-scale=1.0">
+    <title>Asteroids Game</title>
+    <style>
+        canvas {
+            background: black;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="theGameCanvas" width="800" height="600"></canvas>
+    <script>
+        var theCanvasElement = document.getElementById("theGameCanvas");
+        var gameDrawingContext = theCanvasElement.getContext("2d");
+
+        var spaceshipXCoordinate = 400;
+        var spaceshipYCoordinate = 300;
+        var spaceshipRotationAngle = 0;
+
+        var asteroid1XCoordinate = 100;
+        var asteroid1YCoordinate = 100;
+        var asteroid1HorizontalSpeed = 1;
+        var asteroid1VerticalSpeed = 1;
+
+        var asteroid2XCoordinate = 700;
+        var asteroid2YCoordinate = 500;
+        var asteroid2HorizontalSpeed = -1;
+        var asteroid2VerticalSpeed = -1;
+
+        var asteroid3XCoordinate = 200;
+        var asteroid3YCoordinate = 400;
+        var asteroid3HorizontalSpeed = 2;
+        var asteroid3VerticalSpeed = -1.5;
+
+        var asteroid4XCoordinate = 300;
+        var asteroid4YCoordinate = 150;
+        var asteroid4HorizontalSpeed = -1.2;
+        var asteroid4VerticalSpeed = 2;
+
+        var asteroid5XCoordinate = 600;
+        var asteroid5YCoordinate = 350;
+        var asteroid5HorizontalSpeed = 1;
+        var asteroid5VerticalSpeed = -2;
+
+        var asteroid6XCoordinate = 100;
+        var asteroid6YCoordinate = 500;
+        var asteroid6HorizontalSpeed = -2;
+        var asteroid6VerticalSpeed = 1;
+
+        var asteroid7XCoordinate = 400;
+        var asteroid7YCoordinate = 100;
+        var asteroid7HorizontalSpeed = 1.5;
+        var asteroid7VerticalSpeed = -1;
+
+
+
+        var bullet1X = 0;
+        var bullet1Y = 0;
+        var bullet1Active = false;
+        var bullet1Direction = 0;
+
+        var bullet2X = 0;
+        var bullet2Y = 0;
+        var bullet2Active = false;
+        var bullet2Direction = 0;
+
+        var bullet3X = 0;
+        var bullet3Y = 0;
+        var bullet3Active = false;
+        var bullet3Direction = 0;
+
+        var thrustKeyPressed = false;
+        var rotateLeftKeyPressed = false;
+        var rotateRightKeyPressed = false;
+
+
+        window.onkeydown = function (event) {
+            if (event.key === "ArrowUp") thrustKeyPressed = true;
+            if (event.key === "ArrowLeft") rotateLeftKeyPressed = true;
+            if (event.key === "ArrowRight") rotateRightKeyPressed = true;
+            if (event.key === " ") fireBullet();
+        };
+
+        window.onkeyup = function (event) {
+            if (event.key === "ArrowUp") thrustKeyPressed = false;
+            if (event.key === "ArrowLeft") rotateLeftKeyPressed = false;
+            if (event.key === "ArrowRight") rotateRightKeyPressed = false;
+        };
+
+        function fireBullet() {
+            if (!bullet1Active) {
+                bullet1Active = true;
+                bullet1X = spaceshipXCoordinate + Math.cos(spaceshipRotationAngle) * 15;
+                bullet1Y = spaceshipYCoordinate + Math.sin(spaceshipRotationAngle) * 15;
+                bullet1Direction = spaceshipRotationAngle;
+            } else if (!bullet2Active) {
+                bullet2Active = true;
+                bullet2X = spaceshipXCoordinate + Math.cos(spaceshipRotationAngle) * 15;
+                bullet2Y = spaceshipYCoordinate + Math.sin(spaceshipRotationAngle) * 15;
+                bullet2Direction = spaceshipRotationAngle;
+            } else if (!bullet3Active) {
+                bullet3Active = true;
+                bullet3X = spaceshipXCoordinate + Math.cos(spaceshipRotationAngle) * 15;
+                bullet3Y = spaceshipYCoordinate + Math.sin(spaceshipRotationAngle) * 15;
+                bullet3Direction = spaceshipRotationAngle;
+            }
+        }
+
+
+        function gameLoop() {
+            gameDrawingContext.clearRect(0, 0, 800, 600);
+
+            gameDrawingContext.save();
+            gameDrawingContext.translate(spaceshipXCoordinate, spaceshipYCoordinate);
+            gameDrawingContext.rotate(spaceshipRotationAngle);
+            gameDrawingContext.beginPath();
+            gameDrawingContext.moveTo(0, -15);
+            gameDrawingContext.lineTo(10, 10);
+            gameDrawingContext.lineTo(-10, 10);
+            gameDrawingContext.closePath();
+            gameDrawingContext.fillStyle = "white";
+            gameDrawingContext.fill();
+            gameDrawingContext.restore();
+
+            if (rotateLeftKeyPressed) spaceshipRotationAngle -= 0.05;
+            if (rotateRightKeyPressed) spaceshipRotationAngle += 0.05;
+            if (thrustKeyPressed) {
+                spaceshipXCoordinate += Math.cos(spaceshipRotationAngle) * 3;
+                spaceshipYCoordinate += Math.sin(spaceshipRotationAngle) * 3;
+            }
+
+            if (bullet1Active) {
+                gameDrawingContext.beginPath();
+                gameDrawingContext.arc(bullet1X, bullet1Y, 3, 0, Math.PI * 2);
+                gameDrawingContext.fillStyle = "red";
+                gameDrawingContext.fill();
+                bullet1X += Math.cos(bullet1Direction) * 5;
+                bullet1Y += Math.sin(bullet1Direction) * 5;
+                if (Math.sqrt((bullet1X - asteroid1XCoordinate) * (bullet1X - asteroid1XCoordinate) +
+                    (bullet1Y - asteroid1YCoordinate) * (bullet1Y - asteroid1YCoordinate)) < 30) {
+                    asteroid1XCoordinate = -100;
+                    asteroid1YCoordinate = -100;
+                    bullet1Active = false;
+                }
+                if (Math.sqrt((bullet1X - asteroid2XCoordinate) * (bullet1X - asteroid2XCoordinate) +
+                    (bullet1Y - asteroid2YCoordinate) * (bullet1Y - asteroid2YCoordinate)) < 30) {
+                    asteroid2XCoordinate = -100;
+                    asteroid2YCoordinate = -100;
+                    bullet1Active = false;
+                }
+            }
+
+            if (bullet2Active) {
+                gameDrawingContext.beginPath();
+                gameDrawingContext.arc(bullet2X, bullet2Y, 3, 0, Math.PI * 2);
+                gameDrawingContext.fillStyle = "red";
+                gameDrawingContext.fill();
+                bullet2X += Math.cos(bullet2Direction) * 5;
+                bullet2Y += Math.sin(bullet2Direction) * 5;
+                if (Math.sqrt((bullet2X - asteroid1XCoordinate) * (bullet2X - asteroid1XCoordinate) +
+                    (bullet2Y - asteroid1YCoordinate) * (bullet2Y - asteroid1YCoordinate)) < 30) {
+                    asteroid1XCoordinate = -100;
+                    asteroid1YCoordinate = -100;
+                    bullet2Active = false;
+                }
+                if (Math.sqrt((bullet2X - asteroid2XCoordinate) * (bullet2X - asteroid2XCoordinate) +
+                    (bullet2Y - asteroid2YCoordinate) * (bullet2Y - asteroid2YCoordinate)) < 30) {
+                    asteroid2XCoordinate = -100;
+                    asteroid2YCoordinate = -100;
+                    bullet2Active = false;
+                }
+            }
+
+            if (bullet3Active) {
+                gameDrawingContext.beginPath();
+                gameDrawingContext.arc(bullet3X, bullet3Y, 3, 0, Math.PI * 2);
+                gameDrawingContext.fillStyle = "red";
+                gameDrawingContext.fill();
+                bullet3X += Math.cos(bullet3Direction) * 5;
+                bullet3Y += Math.sin(bullet3Direction) * 5;
+                if (Math.sqrt((bullet3X - asteroid1XCoordinate) * (bullet3X - asteroid1XCoordinate) +
+                    (bullet3Y - asteroid1YCoordinate) * (bullet3Y - asteroid1YCoordinate)) < 30) {
+                    asteroid1XCoordinate = -100;
+                    asteroid1YCoordinate = -100;
+                    bullet3Active = false;
+                }
+                if (Math.sqrt((bullet3X - asteroid2XCoordinate) * (bullet3X - asteroid2XCoordinate) +
+                    (bullet3Y - asteroid2YCoordinate) * (bullet3Y - asteroid2YCoordinate)) < 30) {
+                    asteroid2XCoordinate = -100;
+                    asteroid2YCoordinate = -100;
+                    bullet3Active = false;
+                }
+            }
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid1XCoordinate, asteroid1YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid1XCoordinate += asteroid1HorizontalSpeed;
+            asteroid1YCoordinate += asteroid1VerticalSpeed;
+            if (asteroid1XCoordinate > 800) asteroid1XCoordinate = 0;
+            if (asteroid1XCoordinate < 0) asteroid1XCoordinate = 800;
+            if (asteroid1YCoordinate > 600) asteroid1YCoordinate = 0;
+            if (asteroid1YCoordinate < 0) asteroid1YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid2XCoordinate, asteroid2YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid2XCoordinate += asteroid2HorizontalSpeed;
+            asteroid2YCoordinate += asteroid2VerticalSpeed;
+            if (asteroid2XCoordinate > 800) asteroid2XCoordinate = 0;
+            if (asteroid2XCoordinate < 0) asteroid2XCoordinate = 800;
+            if (asteroid2YCoordinate > 600) asteroid2YCoordinate = 0;
+            if (asteroid2YCoordinate < 0) asteroid2YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid3XCoordinate, asteroid3YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid3XCoordinate += asteroid3HorizontalSpeed;
+            asteroid3YCoordinate += asteroid3VerticalSpeed;
+            if (asteroid3XCoordinate > 800) asteroid3XCoordinate = 0;
+            if (asteroid3XCoordinate < 0) asteroid3XCoordinate = 800;
+            if (asteroid3YCoordinate > 600) asteroid3YCoordinate = 0;
+            if (asteroid3YCoordinate < 0) asteroid3YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid4XCoordinate, asteroid4YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid4XCoordinate += asteroid4HorizontalSpeed;
+            asteroid4YCoordinate += asteroid4VerticalSpeed;
+            if (asteroid4XCoordinate > 800) asteroid4XCoordinate = 0;
+            if (asteroid4XCoordinate < 0) asteroid4XCoordinate = 800;
+            if (asteroid4YCoordinate > 600) asteroid4YCoordinate = 0;
+            if (asteroid4YCoordinate < 0) asteroid4YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid5XCoordinate, asteroid5YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid5XCoordinate += asteroid5HorizontalSpeed;
+            asteroid5YCoordinate += asteroid5VerticalSpeed;
+            if (asteroid5XCoordinate > 800) asteroid5XCoordinate = 0;
+            if (asteroid5XCoordinate < 0) asteroid5XCoordinate = 800;
+            if (asteroid5YCoordinate > 600) asteroid5YCoordinate = 0;
+            if (asteroid5YCoordinate < 0) asteroid5YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid6XCoordinate, asteroid6YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid6XCoordinate += asteroid6HorizontalSpeed;
+            asteroid6YCoordinate += asteroid6VerticalSpeed;
+            if (asteroid6XCoordinate > 800) asteroid6XCoordinate = 0;
+            if (asteroid6XCoordinate < 0) asteroid6XCoordinate = 800;
+            if (asteroid6YCoordinate > 600) asteroid6YCoordinate = 0;
+            if (asteroid6YCoordinate < 0) asteroid6YCoordinate = 600;
+
+            gameDrawingContext.beginPath();
+            gameDrawingContext.arc(asteroid7XCoordinate, asteroid7YCoordinate, 30, 0, Math.PI * 2);
+            gameDrawingContext.fillStyle = "gray";
+            gameDrawingContext.fill();
+            asteroid7XCoordinate += asteroid7HorizontalSpeed;
+            asteroid7YCoordinate += asteroid7VerticalSpeed;
+            if (asteroid7XCoordinate > 800) asteroid7XCoordinate = 0;
+            if (asteroid7XCoordinate < 0) asteroid7XCoordinate = 800;
+            if (asteroid7YCoordinate > 600) asteroid7YCoordinate = 0;
+            if (asteroid7YCoordinate < 0) asteroid7YCoordinate = 600;
+
+            if (spaceshipXCoordinate > 800) spaceshipXCoordinate = 0;
+            if (spaceshipXCoordinate < 0) spaceshipXCoordinate = 800;
+            if (spaceshipYCoordinate > 600) spaceshipYCoordinate = 0;
+            if (spaceshipYCoordinate < 0) spaceshipYCoordinate = 600;
+
+            requestAnimationFrame(gameLoop);
+        }
+
+
+        gameLoop();
+    </script>
+</body>
+
+</html>
