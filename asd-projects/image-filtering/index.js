@@ -20,7 +20,9 @@ function resetAndRender() {
 // all of your apply functions
 function applyAndRender() {
   // Multiple TODOs: Call your apply function(s) here
-  applyFilter(reddify)
+  applyFilterNoBackground(reddify)     
+  applyFilter(decreaseBlue)
+  applyFilterNoBackground(increaseGreenByBlue)
   
 
   // do not change the below line of code
@@ -33,46 +35,52 @@ function applyAndRender() {
 
 // TODO 1, 2 & 4: Create the applyFilter function here
 
-function applyFilter(filterFunction){
+function applyFilter(filterFunction){             // Applies a colored filter to an entire image
   for(let i=0; i<image.length; i++){
-    for(let j=0; j<image[i].length; j++){
-      let rgbString = image[i][j];
-      let rgbNumbers = rgbStringToArray(rgbString);
-      filterFunction(rgbNumbers)
-      rgbString = rgbArrayToString(rgbNumbers);
-      image[i][j] = rgbString;
+    for(let j=0; j<image[i].length; j++){  
+      let rgbString = image[i][j];                 
+      let rgbNumbers = rgbStringToArray(rgbString);  
+      filterFunction(rgbNumbers)                  
+      rgbString = rgbArrayToString(rgbNumbers);      
+      image[i][j] = rgbString;                      
     }
   }
 }
 
 // TODO 7: Create the applyFilterNoBackground function
 
+function applyFilterNoBackground(filterFunction){   // Applies a colored filter to an image without affecting the background
+  let backgroundColor = image[0][0]                   
+  for(let i=0; i<image.length; i++){
+    for(let j=0; j<image[i].length; j++){
+      let rgbString = image[i][j];      
+      if(image[i][j] !== backgroundColor){              
+        let rgbNumbers = rgbStringToArray(rgbString);
+        filterFunction(rgbNumbers)
+        rgbString = rgbArrayToString(rgbNumbers);
+        image[i][j] = rgbString;
+      }
+    }
+  }
+}
 
 // TODO 5: Create the keepInBounds function
-function keepInBounds(suckballs){
-  // if(suckballs < 0){
-  //   return 0
-  // } else if(suckballs > 255){
-  //   return 255
-  // } else{
-  //   return suckballs
-  // }
+function keepInBounds(suckballs){                 // This prevents the RGB values of each pixel from going below 0 or above 255
   return (suckballs < 0) ? 0 : ((suckballs > 255) ? 255 : (suckballs))
 }
 
 // TODO 3: Create reddify function
 function reddify(array){
-  array[RED] = 200;
-
+  array[RED] = 200;   // Makes pixels red
 }
 
 // TODO 6: Create more filter functions
 function decreaseBlue(array){
-  array[BLUE] = keepInBounds(array[BLUE] - 50)
+  array[BLUE] = keepInBounds(array[BLUE] - 50)   // Makes pixels blue
 }
 
 function increaseGreenByBlue(array){
-  array[GREEN] = keepInBounds(array[GREEN] + array[BLUE])
+  array[GREEN] = keepInBounds(array[GREEN] + array[BLUE])   // Makes pixels green
 }
 
 
